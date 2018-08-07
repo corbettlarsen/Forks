@@ -3,18 +3,23 @@ const WALL = 1;
 const CRATE = 2;
 
 ROT.RNG.setSeed(1234);
-var map = {};
+var map = new ForkMap();
 var screen_width = 40;
 var screen_height = 40;
 
 var lightPasses = function(x, y) {
     var key = x+","+y;
-    if (key in map) { return (map[key] == FLOOR); }
+    if (map.checkKey(key)) { return (map.checkFloor()); }
     return false;
 }
 var fov = new ROT.FOV.RecursiveShadowcasting(lightPasses);
 var callback = function(x,y,value){
-	map[x + "," + y] = value;
+	if(value){
+    map.placeWall(x,y);
+  }
+  else{
+    map.placeFloor(x,y);
+  }
 }
 var arena = new ROT.Map.Digger(screen_width,screen_height);
 arena.create(callback);
@@ -39,7 +44,7 @@ var getClickPosition = function(e) {
   	display.draw(tile_x,tile_y,"X");
   	var dijkstra = new ROT.Path.Dijkstra(character.x,character.y,
       function(x, y) {
-          return (map[x+","+y] === FLOOR);
+          return (map.checkFloor(x,y));
       }
     );
   	dijkstra.compute(tile_x, tile_y, function(x, y) {
@@ -50,7 +55,7 @@ var getClickPosition = function(e) {
      });
   	character.calcPath();
     }
-  else if((map[tile_x+","+tile_y] == FLOOR) || (map[tile_x+","+tile_y] == CRATE)){
+  else if(!map.check(tile_x,tile_y)){
     if(tile_x <= (character.x+1) && tile_x >= (character.x-1)){
     if(tile_y <= (character.y+1) && tile_y >= (character.y-1)){
     if(!(tile_x == character.x && tile_y == character.y)){
@@ -93,7 +98,7 @@ function EntityContainer(){
   }
   this.removeCrate = function(x,y){
     delete this.entity_map[x+","+y];
-    map[x +","+y] = FLOOR;
+    map.remove(x,y);
   }
   this.drawEntities = function(){
     var entMap = this.entity_map;
@@ -117,7 +122,7 @@ function Cart(startX, startY, icon){
   }
 }
 function Crate(startX, startY, icon){
-  map[startX +","+startY] = CRATE;
+  map.placeCrate(startX,startY);
   Entity.call(this,startX,startY,icon);
 }
 function Entity(startX, startY,icon){
@@ -141,53 +146,53 @@ function Entity(startX, startY,icon){
     this.cart = cart_entity;
   }
   this.northWest = function(){
-    if (!map[(this.x-1)+","+(this.y-1)]){
+    if (!map.check((this.x-1),(this.y-1))){
 		this.x -= 1;
     this.y -= 1;
   }
 }
   this.northEast = function(){
-    if (!map[(this.x+1)+","+(this.y-1)]){
+    if (!map.check((this.x+1),(this.y-1))){
 		this.x += 1;
     this.y -= 1;
   }
 }
   this.southWest = function(){
-    if (!map[(this.x-1)+","+(this.y+1)]){
+    if (!map.check((this.x-1),(this.y+1))){
 		this.x -= 1;
     this.y += 1;
   }
 }
   this.southEast = function(){
-    if (!map[(this.x+1)+","+(this.y+1)]){
+    if (!map.check((this.x+1),(this.y+1))){
 		this.x += 1;
     this.y += 1;
   }
 }
   this.moveUp = function(){
-    if (!map[this.x+","+(this.y-1)]){
+    if (!map.check((this.x),(this.y-1))){
 		this.y -= 1;
 	}
   }
   this.moveDown = function(){
-    if (!map[this.x+","+(this.y+1)]){
+    if (!map.check((this.x),(this.y+1))){
 		this.y += 1;
 	}
   }
   this.moveLeft = function(){
-    if (!map[(this.x-1)+","+this.y]){
+    if (!map.check((this.x-1),(this.y))){
 		this.x -= 1;
 	}
   }
   this.moveRight = function(){
-    if (!map[(this.x+1)+","+this.y]){
+    if (!map.check((this.x+1),this.y)){
 		this.x += 1;
 	}
   }
 	this.fovComp = function(){
   		fov.compute(this.x, this.y, 10,function(x, y, r, visibility) {
   		var ch = null;
-  		var color = (map[x+","+y] ? "#aa0": "#660");
+  		var color = (map.check(x,y) ? "#aa0": "#660");
   		display.draw(x, y, ch, "#fff", color);
   		 });
 	}
@@ -242,7 +247,7 @@ function Entity(startX, startY,icon){
 function place(entity){
   for(i = 0;i <screen_width; i++){
 	for (j = 0; j <screen_height; j++){
-		if(!map[i + "," + j]){
+		if(map.checkFloor(i,j)){
       entity.x = i;
       entity.y = j;
       map[i + "," + j] = 2;
@@ -257,7 +262,7 @@ function place(entity){
 var drawScreen = function(){
   for(i = 0; i < screen_width;i++){
     for(j = 0; j < screen_height;j++){
-      var color = (map[i+","+j] ? "#aa0": "#660");
+      var color = (map.checkWall(i,j) ? "#aa0": "#660");
       display.draw(i, j, null,"#fff",color);
     }
   }
