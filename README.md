@@ -1,4 +1,4 @@
-# ThousandWizards
-Thousand Wizards Roguelike
+# Forks
+A Materials Management Puzzle Roguelike
 
-Requires rot.js v 0.7
+Requires rot.js v 0.6
