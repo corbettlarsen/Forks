@@ -1,3 +1,7 @@
+const FLOOR = 0;
+const WALL = 1;
+const CRATE = 2;
+
 function ForkMap(){
   var entities = {};
 
