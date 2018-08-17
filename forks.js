@@ -23,9 +23,17 @@ var cont = new EntityContainer();
 var character = cont.createEntity(29,20,"@");
 var cart = cont.createCart(29,21,"H");
 var crate = cont.createCrate(30,20,"H");
+cont.createCrate(15,20,"H");
+cont.createCrate(16,20,"H");
+cont.createCrate(17,20,"H");
+cont.createCrate(18,20,"H");
+cont.createCrate(19,20,"H");
+cont.createCrate(14,20,"H");
+cont.createCrate(13,20,"H");
 character.setCart(cart);
 var bayCont = new BayContainer();
 var bay = bayCont.addReceiving(11,9,3,3);
+
 var display = new ROT.Display({width:screen_width, height:screen_height, forceSquareRatio:true});
 var debug = document.createElement("div");
 display.getContainer().addEventListener("keypress", getClickPosition);
@@ -106,6 +114,12 @@ setInterval(function(){
 	drawScreen();
   bayCont.drawBays();
   cont.drawEntities();
+  if (bay.isFull()){
+    display.draw(0, 0, "Y","#fff","#000");
+  }
+  else{
+    display.draw(0, 0, "N","#fff","#000");
+  }
 
 
 }, 100

@@ -4,10 +4,24 @@ const SHIPPING = 1;
 function Bay(x,y,width,length,type){
 
 Bay.prototype.isFull = function(){
-  return Boolean(false);
+  for(var i = x; i < x+width; i++){
+    for(var j = y; j < y+length; j++){
+      if(!map.checkCrate(i,j)){
+        return false
+      }
+    }
+  }
+  return true;
 }
 Bay.prototype.isEmpty = function(){
-  return Boolean(false);
+  for(var i = x; i < x+width; i++){
+    for(var j = y; j < y+length; j++){
+      if(map.checkCrate(i,j)){
+        return true
+      }
+    }
+  }
+  return false;
 }
 Bay.prototype.fill = function(){
 
