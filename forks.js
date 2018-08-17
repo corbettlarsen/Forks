@@ -53,28 +53,27 @@ var getClickPosition = function(e) {
      });
   	character.calcPath();
     }
-  else if(!map.check(tile_x,tile_y)){
+  else if(!map.checkWall(tile_x,tile_y)){
     if(tile_x <= (character.x+1) && tile_x >= (character.x-1)){
     if(tile_y <= (character.y+1) && tile_y >= (character.y-1)){
     if(!(tile_x == character.x && tile_y == character.y)){
     if(!(tile_x == cart.x && tile_y == cart.y)){
-      if(cont.entity_map[tile_x+","+tile_y]){
-        if(!cart.full)
+
+        if(cart.full == true && map.checkFloor(tile_x,tile_y)){
+        cont.createCrate(tile_x,tile_y,"H");
+        cart.empty();
+      }
+        else if(cart.full == false && map.checkCrate(tile_x,tile_y)){
         cont.removeCrate(tile_x,tile_y);
         cart.fill();
         }
-        else{
-          if(cart.full){
-          cont.createCrate(tile_x,tile_y,"H");
-          cart.empty();
-        }
+
+      }
       }
       }
     }
     }
     }
-  }
-}
 display.getContainer().addEventListener("click", getClickPosition);
 
 function place(entity){

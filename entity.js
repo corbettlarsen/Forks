@@ -119,32 +119,32 @@ function Entity(startX, startY,icon){
 }
 
 function EntityContainer(){
-  this.entity_map = {};
-  this.createEntity = function(x,y,icon){
+  var entityMap = {};
+  EntityContainer.prototype.createEntity = function(x,y,icon){
     var entity = new Entity(x,y,icon);
-    this.entity_map[x+","+y] = entity;
+    entityMap[x+","+y] = entity;
     return entity;
    }
-  this.createCart = function(x,y,icon){
+  EntityContainer.prototype.createCart = function(x,y,icon){
     var cart = new Cart(x,y,icon);
-    this.entity_map[x+","+y] = cart;
+    entityMap[x+","+y] = cart;
     return cart;
   }
-  this.createCrate = function(x,y,icon){
+  EntityContainer.prototype.createCrate = function(x,y,icon){
     var crate = new Crate(x,y,icon);
-    this.entity_map[x+","+y] = crate;
+    entityMap[x+","+y] = crate;
     return crate;
   }
-  this.removeCrate = function(x,y){
-    delete this.entity_map[x+","+y];
+  EntityContainer.prototype.removeCrate = function(x,y){
+    delete entityMap[x+","+y];
     map.remove(x,y);
   }
-  this.drawEntities = function(){
-    var entMap = this.entity_map;
+  EntityContainer.prototype.drawEntities = function(){
+    var entMap = entityMap;
     Object.keys(entMap).forEach(function(item) {entMap[item].drawCharacter()});
   }
-  this.actEntities = function(){
-    var entMap = this.entity_map;
+  EntityContainer.prototype.actEntities = function(){
+    var entMap = entityMap;
     Object.keys(entMap).forEach(function(item) {entMap[item].act()});
   }
 }
