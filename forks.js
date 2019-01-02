@@ -39,6 +39,17 @@ var debug = document.createElement("div");
 display.getContainer().addEventListener("keypress", getClickPosition);
 document.body.appendChild(display.getContainer());
 
+/**
+Lost of code initiated after a mouseclick
+Function needs to be broken up into other functions
+Contains:
+1. finding the position in the game grid of a mouse click.
+2. Calculating the path from the character to click and sending it to
+the entity.
+3. Checking if a click is in range of the character.
+4. Handles placing and removing crates.
+*/
+
 var getClickPosition = function(e) {
 	var square_width = display.getContainer().width/screen_width;
 	var square_height = display.getContainer().height/screen_height;
@@ -83,7 +94,9 @@ var getClickPosition = function(e) {
     }
     }
 display.getContainer().addEventListener("click", getClickPosition);
-
+/**
+*Places the character on a space that is not occupied by a wall
+*/
 function place(entity){
   for(i = 0;i <screen_width; i++){
 	for (j = 0; j <screen_height; j++){
@@ -98,6 +111,10 @@ function place(entity){
 }
   return 0;
 }
+
+/**
+drawscreen as used in the setInterval functioning
+*/
 
 var drawScreen = function(){
   for(i = 0; i < screen_width;i++){
