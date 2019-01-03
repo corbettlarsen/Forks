@@ -1,6 +1,8 @@
 ROT.RNG.setSeed(1234);
 var map = new ForkMap();
-var screen_width = 40;
+var map_width = 40;
+var map_height = 40;
+var screen_width = 50;
 var screen_height = 40;
 
 var lightPasses = function(x, y) {
@@ -17,7 +19,7 @@ var callback = function(x,y,value){
     map.placeFloor(x,y);
   }
 }
-var arena = new ROT.Map.Digger(screen_width,screen_height);
+var arena = new ROT.Map.Digger(map_width,map_height);
 arena.create(callback);
 var cont = new EntityContainer();
 var character = cont.createEntity(29,20,"@");
@@ -98,8 +100,8 @@ display.getContainer().addEventListener("click", getClickPosition);
 *Places the character on a space that is not occupied by a wall
 */
 function place(entity){
-  for(i = 0;i <screen_width; i++){
-	for (j = 0; j <screen_height; j++){
+  for(i = 0;i <map_width; i++){
+	for (j = 0; j <map_height; j++){
 		if(map.checkFloor(i,j)){
       entity.x = i;
       entity.y = j;
@@ -117,18 +119,32 @@ drawscreen as used in the setInterval functioning
 */
 
 var drawScreen = function(){
-  for(i = 0; i < screen_width;i++){
-    for(j = 0; j < screen_height;j++){
+  for(i = 0; i < map_width;i++){
+    for(j = 0; j < map_height;j++){
       var color = (map.checkWall(i,j) ? "#aa0": "#660");
       display.draw(i, j, null,"#fff",color);
     }
   }
+}
+/**
+draws the 10*10 space around the character.
+*/
+
+var drawLocal = function(){
+  for(i = -5; i < 5 ;i++){
+    for(j = -5; j < 5;j++){
+      var color = (map.checkWall(character.x+i,character.y+j) ? "#aa0": "#660");
+      display.draw(map_width+i+5, j+5, null,"#fff",color);
+    }
+  }
+  display.draw(map_width+5, 5,character.icon);
 }
 setInterval(function(){
 
   cont.actEntities();
   display.clear();
 	drawScreen();
+  drawLocal();
   bayCont.drawBays();
   cont.drawEntities();
   if (bay.isFull()){
