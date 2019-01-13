@@ -26,23 +26,35 @@ Bay.prototype.isEmpty = function(){
   for(var i = x; i < x+width; i++){
     for(var j = y; j < y+length; j++){
       if(map.checkCrate(i,j)){
-        return true
+        return false
       }
     }
   }
-  return false;
+  return true;
 }
 /**
 Fills bay with crates
 */
 Bay.prototype.fill = function(){
-
+  if(this.isEmpty()){
+    for(var i = x; i < x+width; i++){
+      for(var j = y; j < y+length; j++){
+        cont.createCrate(i,j,"H");
+      }
+  }
+}
 }
 /**
 removes all crates from bay
 */
 Bay.prototype.empty = function(){
-
+  if(this.isFull()){
+    for(var i = x; i < x+width; i++){
+      for(var j = y; j < y+length; j++){
+        cont.removeCrate(i,j);
+      }
+  }
+}
 }
 /**
 Draws each square of the bay.

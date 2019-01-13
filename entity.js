@@ -158,9 +158,11 @@ create entity and add to map.
 return reference
 */
   EntityContainer.prototype.createEntity = function(x,y,icon){
+    if(entityMap[x+","+y] == null){
     var entity = new Entity(x,y,icon);
     entityMap[x+","+y] = entity;
     return entity;
+    }
    }
 
   /**

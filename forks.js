@@ -59,7 +59,7 @@ var getClickPosition = function(e) {
 	var click_y = (e.clientY + 6)/square_height;
 	var tile_x = Math.floor(click_x)-1;
 	var tile_y = Math.floor(click_y)-1;
-  if(!e.shiftKey){
+  if(!e.ctrlKey){
   	display.draw(tile_x,tile_y,"X");
   	var dijkstra = new ROT.Path.Dijkstra(character.x,character.y,
       function(x, y) {
@@ -140,14 +140,14 @@ var drawLocal = function(){
   display.draw(map_width+5, 5,character.icon);
 }
 setInterval(function(){
-
+  bay.empty();
   cont.actEntities();
   display.clear();
 	drawScreen();
   drawLocal();
   bayCont.drawBays();
   cont.drawEntities();
-  if (bay.isFull()){
+  if (bay.isEmpty()){
     display.draw(0, 0, "Y","#fff","#000");
   }
   else{
