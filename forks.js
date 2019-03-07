@@ -1,9 +1,11 @@
 ROT.RNG.setSeed(1234);
+const BAYINTERVAL = 300;
 var map = new ForkMap();
 var map_width = 40;
 var map_height = 40;
 var screen_width = 50;
 var screen_height = 40;
+var playing = Boolean(true);
 
 var lightPasses = function(x, y) {
     var key = x+","+y;
@@ -25,16 +27,13 @@ var cont = new EntityContainer();
 var character = cont.createEntity(29,20,"@");
 var cart = cont.createCart(29,21,"H");
 var crate = cont.createCrate(30,20,"H");
-cont.createCrate(15,20,"H");
-cont.createCrate(16,20,"H");
-cont.createCrate(17,20,"H");
-cont.createCrate(18,20,"H");
-cont.createCrate(19,20,"H");
-cont.createCrate(14,20,"H");
-cont.createCrate(13,20,"H");
+var clock = new Clock();
 character.setCart(cart);
+
 var bayCont = new BayContainer();
-var bay = bayCont.addReceiving(11,9,3,3);
+var bayOne = bayCont.addReceiving(11,9,2,2);
+var bayTwo = bayCont.addShipping(17,12,3,3);
+var bayThree = bayCont.addShipping(29,16,3,3);
 
 var display = new ROT.Display({width:screen_width, height:screen_height, forceSquareRatio:true});
 var debug = document.createElement("div");
@@ -139,22 +138,46 @@ var drawLocal = function(){
   }
   display.draw(map_width+5, 5,character.icon);
 }
+
+var write = function(string,x,y){
+  for(var i = 0; i < string.length;i++){
+    display.draw(x+i,y,string[i],"#fff","#000");
+  }
+}
 setInterval(function(){
-  bay.empty();
-  cont.actEntities();
-  display.clear();
-	drawScreen();
-  drawLocal();
-  bayCont.drawBays();
-  cont.drawEntities();
-  if (bay.isEmpty()){
-    display.draw(0, 0, "Y","#fff","#000");
+  if(playing == Boolean(true)){
+    clock.incrementTime();
+    cont.actEntities();
+    display.clear();
+  	drawScreen();
+    drawLocal();
+    bayCont.drawBays();
+    cont.drawEntities();
+
+    var loadTime = clock.getTime()%BAYINTERVAL;
+    loadTime = BAYINTERVAL-loadTime;
+    var loadTimeString = loadTime.toString();
+    write(loadTimeString,32,0);
+
+    write("Time until next load:",10,0);
+    if (bayOne.isEmpty()){
+      display.draw(0, 0, "Y","#fff","#000");
+    }
+    else{
+      display.draw(0, 0, "N","#fff","#000");
+    }
+    if(clock.getTime()%BAYINTERVAL == 0){
+      if(!bayOne.isEmpty()){
+        playing = false;
+      }
+      bayOne.fill();
+    }
+    bayTwo.empty();
+    bayThree.empty();
   }
   else{
-    display.draw(0, 0, "N","#fff","#000");
+    write("You Lose",22,22);
   }
-
-
 }, 100
 
 );
