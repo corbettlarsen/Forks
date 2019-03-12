@@ -1,5 +1,5 @@
 ROT.RNG.setSeed(1234);
-const BAYINTERVAL = 300;
+const BAYINTERVAL = 200;
 var map = new ForkMap();
 var map_width = 40;
 var map_height = 40;
@@ -27,7 +27,7 @@ var cont = new EntityContainer();
 var character = cont.createEntity(29,20,"@");
 var cart = cont.createCart(29,21,"H");
 var crate = cont.createCrate(30,20,"H");
-var clock = new Clock();
+var clock = new Clock(BAYINTERVAL);
 character.setCart(cart);
 
 var bayCont = new BayContainer();
@@ -155,11 +155,15 @@ setInterval(function(){
     cont.drawEntities();
 
     var loadTime = clock.getTime()%BAYINTERVAL;
+    var loadWaves = clock.getWaves();
     loadTime = BAYINTERVAL-loadTime;
     var loadTimeString = loadTime.toString();
+    var loadWavesString = loadWaves.toString();
     write(loadTimeString,32,0);
+    write(loadWavesString,32,1);
 
     write("Time until next load:",10,0);
+    write("Waves survived:",10,1);
     if (bayOne.isEmpty()){
       display.draw(0, 0, "Y","#fff","#000");
     }
@@ -171,6 +175,7 @@ setInterval(function(){
         playing = false;
       }
       bayOne.fill();
+      clock.incrementWaves();
     }
     bayTwo.empty();
     bayThree.empty();

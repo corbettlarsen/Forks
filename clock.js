@@ -1,9 +1,16 @@
-function Clock(){
-  var time = 299;
+function Clock(startTime){
+  this.time = startTime-1;
+  this.waves = -1;
   Clock.prototype.getTime = function(){
-    return time;
+    return this.time;
+  }
+  Clock.prototype.getWaves = function(){
+    return this.waves;
   }
   Clock.prototype.incrementTime = function(){
-    time++;
+    this.time++;
+  }
+  Clock.prototype.incrementWaves = function(){
+    this.waves++;
   }
 }
