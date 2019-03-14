@@ -1,6 +1,7 @@
 ROT.RNG.setSeed(1234);
 const BAYINTERVAL = 200;
-var map = new ForkMap();
+var floor = new Floor();
+var map = floor.getMap();
 var map_width = 40;
 var map_height = 40;
 var screen_width = 50;
@@ -23,14 +24,14 @@ var callback = function(x,y,value){
 }
 var arena = new ROT.Map.Digger(map_width,map_height);
 arena.create(callback);
-var cont = new EntityContainer();
+var cont = floor.getEntityContainer();
 var character = cont.createEntity(29,20,"@");
 var cart = cont.createCart(29,21,"H");
 var crate = cont.createCrate(30,20,"H");
 var clock = new Clock(BAYINTERVAL);
 character.setCart(cart);
 
-var bayCont = new BayContainer();
+var bayCont = floor.getBayContainer();
 var bayOne = bayCont.addReceiving(11,9,2,2);
 var bayTwo = bayCont.addShipping(17,12,3,3);
 var bayThree = bayCont.addShipping(29,16,3,3);

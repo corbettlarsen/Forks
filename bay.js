@@ -85,26 +85,26 @@ manage adding and removing and bulk actions of bays
 */
 
 function BayContainer(){
-  var bayMap = {};
+  this.bayMap = {};
   /**
   Add bay that is for adding crates to the map.
   */
   BayContainer.prototype.addReceiving = function(x,y,width,length){
-    bayMap[x+","+y] = new Bay(x,y,width,length,RECEIVING);
-    return bayMap[x+","+y];
+    this.bayMap[x+","+y] = new Bay(x,y,width,length,RECEIVING);
+    return this.bayMap[x+","+y];
   }
   /**
   Add bay that is for removing crates from the map.
   */
   BayContainer.prototype.addShipping = function(x,y,width,length){
-    bayMap[x+","+y] = new Bay(x,y,width,length,SHIPPING);
-    return bayMap[x+","+y];
+    this.bayMap[x+","+y] = new Bay(x,y,width,length,SHIPPING);
+    return this.bayMap[x+","+y];
   }
   /**
   Remove a bay from the map
   */
   BayContainer.prototype.removeBay = function(x,y){
-    delete bayMap[x+","+y];
+    delete this.bayMap[x+","+y];
   }
   /**
   Fill all bays? or just receiving bays?
@@ -121,6 +121,8 @@ function BayContainer(){
   */
   }
   BayContainer.prototype.drawBays = function(){
-    Object.keys(bayMap).forEach(function(item) {bayMap[item].draw()});
+    var bayMapTemp = this.bayMap;
+    var keys = Object.keys(bayMapTemp);
+    keys.forEach(function(item) {bayMapTemp[item].draw()});
   }
 }

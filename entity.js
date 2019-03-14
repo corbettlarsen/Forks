@@ -119,32 +119,32 @@ function Entity(startX, startY,icon){
 }
 
 function EntityContainer(){
-  var entityMap = {};
+  this.entityMap = {};
   EntityContainer.prototype.createEntity = function(x,y,icon){
     var entity = new Entity(x,y,icon);
-    entityMap[x+","+y] = entity;
+    this.entityMap[x+","+y] = entity;
     return entity;
    }
   EntityContainer.prototype.createCart = function(x,y,icon){
     var cart = new Cart(x,y,icon);
-    entityMap[x+","+y] = cart;
+    this.entityMap[x+","+y] = cart;
     return cart;
   }
   EntityContainer.prototype.createCrate = function(x,y,icon){
     var crate = new Crate(x,y,icon);
-    entityMap[x+","+y] = crate;
+    this.entityMap[x+","+y] = crate;
     return crate;
   }
   EntityContainer.prototype.removeCrate = function(x,y){
-    delete entityMap[x+","+y];
+    delete this.entityMap[x+","+y];
     map.remove(x,y);
   }
   EntityContainer.prototype.drawEntities = function(){
-    var entMap = entityMap;
+    var entMap = this.entityMap;
     Object.keys(entMap).forEach(function(item) {entMap[item].drawCharacter()});
   }
   EntityContainer.prototype.actEntities = function(){
-    var entMap = entityMap;
+    var entMap = this.entityMap;
     Object.keys(entMap).forEach(function(item) {entMap[item].act()});
   }
 }
